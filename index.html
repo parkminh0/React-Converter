@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function TimeConverter(){
+        const [amount, setAmount] = React.useState(0);
+        const [inverted, setInverted] = React.useState(false);
+        const onChange = (event) => setAmount(event.target.value);
+        const reset = () => setAmount(0);
+        const onFlip = () => {
+            reset();
+            setInverted((current) => !current);
+        };
+        return (
+            <div>
+                <h3>Time Converter</h3>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={inverted ? amount*60 : amount}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number"
+                        onChange={onChange}
+                        disabled={inverted}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input  
+                        value={inverted ? amount :Math.round(amount/60)}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number"
+                        disabled={!inverted}
+                        onChange={onChange}
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>{inverted ? "Minutes to Hours" : "Hours to Minutes"}</button>
+            </div>
+        );
+    }
+    function DistanceConverter(){
+        const [distance,setDistance] = React.useState(0);
+        const [inverted, setInverted] = React.useState(false);
+        const onChange = (event) => setDistance(event.target.value);
+        const reset = (event) => setDistance(0);
+        const invert = (event) => {
+            reset();
+            setInverted((current) => !current);
+        } 
+        return (
+            <div>
+                <h3>Distance Converter</h3>
+                <div id="K">
+                    <label htmlFor="kilo">Kilometers</label>
+                        <input 
+                            value={inverted ? distance*1.6 : distance}
+                            id="kilo"
+                            type="number"
+                            onChange={onChange}
+                            disabled={inverted}
+                        />
+                </div>
+                <div id="M">
+                    <label htmlFor="mile">Miles</label>
+                        <input
+                            value={inverted ? distance : distance/1.6}
+                            id="mile"
+                            type="number"
+                            onChange={onChange}
+                            disabled={!inverted}
+                        />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={invert}>{inverted ? "Kilos to Miles" : "Miles to Kilos"}</button>
+            </div>
+        );
+    }
+    function App(){
+        const [index, setIndex] = React.useState();
+        const onSelect = (event) => {
+            setIndex(event.target.value);
+        }
+        return (
+            <div>
+                <h1>Super Converter</h1>
+                <select value = {index} onChange={onSelect}>
+                    <option style = {{color:"gray"}}>Choose One</option>
+                    <option value="0">Time Converter</option>
+                    <option value="1">Distance Converter</option>
+                </select>
+                <hr/>
+                {index === "0" ? <TimeConverter/> : null}
+                {index === "1" ? <DistanceConverter/> : null}
+            </div>
+        )
+    }
+    const root = document.querySelector("#root");
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
